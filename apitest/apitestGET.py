@@ -2,26 +2,28 @@
 from flask import Flask, jsonify, Response, abort, make_response, request
 import json, os
 from flask import Blueprint
+import uris
 
 # apiGET = Flask(__name__)
 apiGET = Blueprint('apiGET',__name__)
 
-with open('tasks.json') as data:
-  tasks = json.load(data)
+def tt():
+  with open('tasks.json') as data:
+    tasks = json.load(data)
+  return tasks
 
 @apiGET.route('/tasks/<int:task_id>', methods=['GET'])
 def get_task(task_id):
-  task = [task for task in tasks.values()[0] if task['id']==task_id]
+  task = [task for task in tt() if task['id']==task_id]
 #   task = [task for task in tasks['tasks'] if task['id']==task_id]
   if len(task) == 0:
     abort(404)
   return jsonify(task[0])
 
+@apiGET.route('/tasks/')
 @apiGET.route('/tasks', methods= ['GET'])
 def get_tasks():
-  return Response(json.dumps(tasks, indent = None), mimetype='application/json')
-  #return json.dumps({'tasks':tasks}, indent = None)
-#   return jsonify({'tasks':tasks})
+  return jsonify([uris.make_public_task(task) for task in tt()])
 
 @apiGET.errorhandler(404)
 def not_found(error):
