@@ -2,7 +2,7 @@
 from flask import Flask, jsonify, Response, abort, make_response, request
 import json, os
 from flask import Blueprint
-import uris
+import uris, auth
 
 # apiGET = Flask(__name__)
 apiGET = Blueprint('apiGET',__name__)
@@ -20,10 +20,13 @@ def get_task(task_id):
     abort(404)
   return jsonify(task[0])
 
-@apiGET.route('/tasks/')
 @apiGET.route('/tasks', methods= ['GET'])
+@auth.auth.login_required
 def get_tasks():
+#   return Response(json.dumps(tasks, indent = None), mimetype='application/json')
+  #return json.dumps({'tasks':tasks}, indent = None)
   return jsonify([uris.make_public_task(task) for task in tt()])
+#   return jsonify(tt())
 
 @apiGET.errorhandler(404)
 def not_found(error):

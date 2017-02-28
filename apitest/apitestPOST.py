@@ -34,7 +34,7 @@ def update_task(task_id):
     json.dump(tlist, data)
   return jsonify(task[0])
 
-@apiPOST.route('/tasks/<int:task_id>', methods=['DELETE'])
+@apiPOST.route('/tasks/<int:task_id>', methods=['DELETE','PUT'])
 def delete_task(task_id):
   tlist = tt()
   task = [task for task in tlist if task['id']== task_id]

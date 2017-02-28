@@ -1,5 +1,6 @@
 from flask import Flask
 import apitestGET, apitestPOST
+import auth
 
 app = Flask(__name__)
 app.register_blueprint(apitestGET.apiGET, url_prefix = '/GET')
