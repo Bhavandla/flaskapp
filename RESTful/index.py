@@ -34,7 +34,15 @@ class TaskAPI(Resource):
   def get(self, id):
     pass
   def put(self, id):
-    pass
+    task = filter(lambda t: t['id'] == id, tasks)
+        if len(task) == 0:
+            abort(404)
+        task = task[0]
+        args = self.reqparse.parse_args()
+        for k, v in args.iteritems():
+            if v != None:
+                task[k] = v
+        return jsonify( { 'task': make_public_task(task) } )
   def delete(self, id):
     pass
   
