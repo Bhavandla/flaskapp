@@ -1,7 +1,11 @@
 from flask import render_template, flash, redirect, url_for, request
-from app import app, mysql
+from app import app, mysql, lm
 from .forms import LoginForm
-from flask.ext.mysql import MySQL
+from flaskext.mysql import MySQL
+from oauth import OAuthSignIn
+from flask_login import login_user, logout_user, current_user
+
+lm.login_view = 'index'
 
 @app.route('/')
 @app.route('/index')
@@ -32,6 +36,10 @@ def login():
                            form=form,
                            providers=app.config['OPENID_PROVIDERS'])
   
+@app.route('/logout')
+def logout():
+  logout_user()
+  
 @app.route("/Authenticate")
 def Authenticate():
     username = request.args.get('UserName')
@@ -43,3 +51,35 @@ def Authenticate():
      return "Username or Password is wrong"
     else:
      return "Logged in successfully"
+  
+@app.route('/authorize/<provider>')
+def oauth_authorize(provider):
+  if not current_user.is_anonymous():
+    return redirect(urls_for('index'))
+  oauth = OAuthSignIn.get_provider(provider)
+  return oauth.authorize()
+
+@app.route('/callback/<provider>')
+def oauth_callback(provider):
+    if not current_user.is_anonymous():
+        return redirect(url_for('index'))
+    oauth = OAuthSignIn.get_provider(provider)
+    social_id, username, email = oauth.callback()
+    if social_id is None:
+        flash('Authentication failed.')
+        return redirect(url_for('index'))
+    user = User.query.filter_by(social_id=social_id).first()
+    if not user:
+        user = User(social_id=social_id, nickname=username, email=email)
+        db.session.add(user)
+        db.session.commit()
+    login_user(user, True)
+    return redirect(url_for('index'))
+
+
+
+
+
+
+
+
