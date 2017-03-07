@@ -1,6 +1,6 @@
 from app import app, db
 from flask.ext.login import LoginManager, UserMixin
-from rauth import OAuth1Service, OAuth2Service, oauth_session
+from rauth import OAuth1Service, OAuth2Service
 from flask import current_app, url_for, request, redirect, session
 
 class OAuthSignIn(object):
@@ -35,9 +35,9 @@ class FacebookSignIn(OAuthSignIn):
       super(FacebookSignIn, self).__init__('facebook')
       self.service = OAuth2Service(
         name = 'facebook',
-        clinet_id = self.consumer_id,
-        clinet_secret = self.consumer_secret,
-        authorize_url = 'https://graph.facebook.com/oauth/authorize'
+        client_id = self.consumer_id,
+        client_secret = self.consumer_secret,
+        authorize_url = 'https://graph.facebook.com/oauth/authorize',
         access_token_url='https://graph.facebook.com/oauth/access_token',
         base_url='https://graph.facebook.com/'
       )
@@ -55,10 +55,10 @@ class FacebookSignIn(OAuthSignIn):
         oauth_session = self.service.get_auth_session(
           data = { 'code': request.args['code'],
                  'grant_type': 'authorization_code',
-                 'redirect_uri': self.get_callback_url()}
+                 'redirect_uri': self.get_callback_url()},
         )
         me = oauth_session.get('me').json()
-        return ('
+        return (
                 'facebook$' + me['id'],
                 me.get('email').split('@')[0],  # Facebook does not provide
                                                 # username, so the email's user
@@ -85,6 +85,11 @@ class TwitterSignIn(OAuthSignIn):
       )
       session['request_token'] = request_token
       return redirect(self.service.get_authorize_url(request_token[0]))
+    
+#     def reuse_session(self, user):
+#         access_token, access_token_secret = self.KNOWN_USERS[user]
+#         session = self.twitter.get_session((access_token, access_token_secret))
+#         return session
     
     def callback(self):
       request_token =  session.pop('request_token')

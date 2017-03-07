@@ -1,9 +1,10 @@
 from flask import render_template, flash, redirect, url_for, request
-from app import app, mysql, lm
+from app import app, mysql, lm, db
 from .forms import LoginForm
 from flaskext.mysql import MySQL
 from oauth import OAuthSignIn
 from flask_login import login_user, logout_user, current_user
+from models import User
 
 lm.login_view = 'index'
 
@@ -39,6 +40,7 @@ def login():
 @app.route('/logout')
 def logout():
   logout_user()
+  return redirect(url_for('index'))
   
 @app.route("/Authenticate")
 def Authenticate():
@@ -54,14 +56,14 @@ def Authenticate():
   
 @app.route('/authorize/<provider>')
 def oauth_authorize(provider):
-  if not current_user.is_anonymous():
-    return redirect(urls_for('index'))
+  if not current_user.is_anonymous:
+    return redirect(url_for('index'))
   oauth = OAuthSignIn.get_provider(provider)
   return oauth.authorize()
 
 @app.route('/callback/<provider>')
 def oauth_callback(provider):
-    if not current_user.is_anonymous():
+    if not current_user.is_anonymous:
         return redirect(url_for('index'))
     oauth = OAuthSignIn.get_provider(provider)
     social_id, username, email = oauth.callback()

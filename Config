@@ -45,3 +45,7 @@ netstat -tulpn
 sudo apt-get update && sudo apt-get dist-upgrade
 sudo dpkg --clear-avail
 sudo apt-get update && sudo apt-get dist-upgrade
+
+sudo apt-get install build-essential libssl-dev libffi-dev python-dev
+https://urllib3.readthedocs.io/en/latest/user-guide.html#ssl-py2
+
