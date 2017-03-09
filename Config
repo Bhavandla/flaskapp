@@ -49,3 +49,13 @@ sudo apt-get update && sudo apt-get dist-upgrade
 sudo apt-get install build-essential libssl-dev libffi-dev python-dev
 https://urllib3.readthedocs.io/en/latest/user-guide.html#ssl-py2
 
+SET FOREIGN_KEY_CHECKS = 0; 
+TRUNCATE table1; 
+SET FOREIGN_KEY_CHECKS = 1;
+
+ALTER TABLE t2 ADD INDEX (d), ADD UNIQUE (a);
+
+pip freeze > dump.txt
+cat dump.txt | xargs sudo pip uninstall -y
+
+python -m smtpd -n -c DebuggingServer localhost:25

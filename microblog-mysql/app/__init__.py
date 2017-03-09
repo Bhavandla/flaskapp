@@ -11,4 +11,7 @@ db = SQLAlchemy(app)
 
 lm = LoginManager(app)
 
+from app import mail
+mail.mail_send_to_file()
+
 from app import views, models

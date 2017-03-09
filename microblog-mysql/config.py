@@ -9,12 +9,14 @@ OPENID_PROVIDERS = [
     {'name': 'MyOpenID', 'url': 'https://www.myopenid.com'}]
 
 import os
+basedir = os.path.abspath(os.path.dirname(__file__))
 MYSQL_DATABASE_USER= "root"
 MYSQL_DATABASE_PASSWORD= "bhava"
 MYSQL_DATABASE_DB= "EmpData"
 MYSQL_DATABASE_HOST= "localhost"
 SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://' + MYSQL_DATABASE_USER + ':' + MYSQL_DATABASE_PASSWORD + '@' + MYSQL_DATABASE_HOST + "/" + MYSQL_DATABASE_DB
 SQLALCHEMY_MIGRATE_REPO = os.path.join(SQLALCHEMY_DATABASE_URI, 'db_repository')
+SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 OAUTH_CREDENTIALS = {
   'twitter': {
@@ -26,3 +28,12 @@ OAUTH_CREDENTIALS = {
         'secret': '010cc08bd4f51e34f3f3e684fbdea8a7'
     }
 }
+
+# mail server settings
+MAIL_SERVER = 'localhost'
+MAIL_PORT = 9999
+MAIL_USERNAME = None
+MAIL_PASSWORD = None
+
+#administrator list
+ADMINS = ['you@example.com']
