@@ -5,7 +5,3 @@ myvenv
 db.sqlite3
 /static
 .DS_Store
-mkdir app
-mkdir app/static
-mkdir app/templates
-$ mkdir tmp
